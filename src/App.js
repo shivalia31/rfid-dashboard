@@ -124,13 +124,15 @@ function App() {
   useEffect(() => {
   async function load() {
     try {
-      const devicesRes = await fetch("http://localhost:7071/api/GetDevices");
+      const devicesRes = await fetch("/api/GetDevices");
+      if (!devicesRes.ok) throw new Error(`Devices API ${devicesRes.status}`);
       const devicesJson = await devicesRes.json();
-      setDevices(devicesJson);
+      setDevices(Array.isArray(devicesJson) ? devicesJson : (devicesJson.value || devicesJson.documents || []));
 
-      const scansRes = await fetch("http://localhost:7071/api/GetScans");
+      const scansRes = await fetch("/api/GetScans");
+      if (!scansRes.ok) throw new Error(`Scans API ${scansRes.status}`);
       const scansJson = await scansRes.json();
-      setScans(scansJson);
+      setScans(Array.isArray(scansJson) ? scansJson : (scansJson.value || scansJson.documents || []));
     } catch (error) {
       console.error("Failed to load data:", error);
     }
