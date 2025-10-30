@@ -123,16 +123,21 @@ function App() {
 
   useEffect(() => {
   async function load() {
-    const devicesRes = await fetch("http://localhost:7071/api/GetDevices");
-    const devicesJson = await devicesRes.json();
-    setDevices(devicesJson);
+    try {
+      const devicesRes = await fetch("http://localhost:7071/api/GetDevices");
+      const devicesJson = await devicesRes.json();
+      setDevices(devicesJson);
 
-    const scansRes = await fetch("http://localhost:7071/api/GetScans");
-    const scansJson = await scansRes.json();
-    setScans(scansJson);
+      const scansRes = await fetch("http://localhost:7071/api/GetScans");
+      const scansJson = await scansRes.json();
+      setScans(scansJson);
+    } catch (error) {
+      console.error("Failed to load data:", error);
+    }
   }
-  load().catch(console.error);
+  load();
 }, []);
+
 
   const visibleScans = deviceFilter
     ? scans.filter((s) => (s.device_id || "").toLowerCase().includes(deviceFilter.toLowerCase()))
